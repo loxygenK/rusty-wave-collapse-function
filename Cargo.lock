@@ -40,6 +40,7 @@ dependencies = [
 name = "f4n-wcf-app"
 version = "0.1.0"
 dependencies = [
+ "f4n-wcf-core",
  "f4n-wcf-visualizer",
 ]
 
@@ -51,6 +52,7 @@ version = "0.1.0"
 name = "f4n-wcf-visualizer"
 version = "0.1.0"
 dependencies = [
+ "f4n-wcf-core",
  "yew",
 ]
 
