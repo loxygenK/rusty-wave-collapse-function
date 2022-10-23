@@ -1,3 +1,8 @@
+use pages::index::IndexPage;
+
+mod components;
+mod pages;
+
 fn main() {
-    println!("Hello, world!");
+    yew::start_app::<IndexPage>();
 }
