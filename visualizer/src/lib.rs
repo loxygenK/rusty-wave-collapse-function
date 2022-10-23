@@ -3,6 +3,6 @@ use pages::index::IndexPage;
 mod components;
 mod pages;
 
-fn main() {
+pub fn start() {
     yew::start_app::<IndexPage>();
 }

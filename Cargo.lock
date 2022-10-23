@@ -37,6 +37,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "f4n-wcf-app"
+version = "0.1.0"
+dependencies = [
+ "f4n-wcf-visualizer",
+]
+
+[[package]]
 name = "f4n-wcf-core"
 version = "0.1.0"
 
