@@ -1,1 +1,0 @@
-pub struct Coordinate(x: usize, y: usize);
