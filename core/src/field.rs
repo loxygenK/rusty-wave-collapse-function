@@ -4,23 +4,6 @@ use std::marker::PhantomData;
 
 use crate::tile::Tile;
 
-pub enum Side {
-    Left,
-    Top,
-    Bottom,
-    Right
-}
-impl Side {
-    pub fn of(self, coord: (usize, usize)) -> (usize, usize) {
-        match self {
-            Side::Left => (coord.0 - 1, coord.1),
-            Side::Top => (coord.0, coord.1 - 1),
-            Side::Bottom => (coord.0, coord.1 + 1),
-            Side::Right => (coord.0 + 1, coord.1),
-        }
-    }
-}
-
 #[derive(Default, Clone)]
 pub struct TilePossibility<Id: Eq + Clone> {
     possible_tiles: Vec<Id>
@@ -53,7 +36,7 @@ pub struct Field<Id: Eq + Clone, Sides: Eq> {
 
 impl<Id: Eq + Clone, Sides: Eq> Field<Id, Sides> {
     pub fn new(
-        tiles: &[&dyn Tile<Identifier = Id, Sides = Sides>],
+        tiles: &[&dyn Tile<Identifier = Id>],
         width: usize,
         height: usize
     ) -> Self {
@@ -70,7 +53,9 @@ impl<Id: Eq + Clone, Sides: Eq> Field<Id, Sides> {
     }
 
     pub fn at(&self, x: usize, y: usize) -> Option<&TilePossibility<Id>> {
-        self.at_mut(x, y).map(|tile| &*tile)
+        self.tiles
+            .get(y)
+            .and_then(|row| row.get(x))
     }
 
     pub fn at_mut(&mut self, x: usize, y: usize) -> Option<&mut TilePossibility<Id>> {

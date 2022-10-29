@@ -1,5 +1,5 @@
-use f4n_wcf_core::tile::SimpleTile;
-use f4n_wcf_visualizer::renderable_tiles::{RenderableTile, RenderableSides};
+use f4n_wcf_core::{tile::SimpleTile, side::Side};
+use f4n_wcf_visualizer::renderable_tiles::RenderableTile;
 
 #[derive(Clone, Eq, PartialEq)]
 pub enum TileType {
@@ -12,14 +12,13 @@ pub enum TileType {
 pub struct TopTile;
 impl SimpleTile for TopTile {
     type Identifier = TileType;
-    type Sides = RenderableSides;
 
     fn identifier(&self) -> Self::Identifier {
         TileType::Top
     }
 
-    fn acceptable_sides(&self) -> Vec<Self::Sides> {
-        enums!(RenderableSides:{Top, Left, Right})
+    fn acceptable_sides(&self) -> Vec<Side> {
+        enums!(Side:{Top, Left, Right})
     }
 }
 impl RenderableTile for TopTile {
@@ -31,14 +30,13 @@ impl RenderableTile for TopTile {
 pub struct LeftTile;
 impl SimpleTile for LeftTile {
     type Identifier = TileType;
-    type Sides = RenderableSides;
 
     fn identifier(&self) -> Self::Identifier {
         TileType::Left
     }
 
-    fn acceptable_sides(&self) -> Vec<Self::Sides> {
-        enums!(RenderableSides:{Top, Bottom, Left})
+    fn acceptable_sides(&self) -> Vec<Side> {
+        enums!(Side:{Top, Bottom, Left})
     }
 }
 impl RenderableTile for LeftTile {
@@ -50,14 +48,13 @@ impl RenderableTile for LeftTile {
 pub struct BottomTile;
 impl SimpleTile for BottomTile {
     type Identifier = TileType;
-    type Sides = RenderableSides;
 
     fn identifier(&self) -> Self::Identifier {
         TileType::Bottom
     }
 
-    fn acceptable_sides(&self) -> Vec<Self::Sides> {
-        enums!(RenderableSides:{Bottom, Left, Right})
+    fn acceptable_sides(&self) -> Vec<Side> {
+        enums!(Side:{Bottom, Left, Right})
     }
 }
 impl RenderableTile for BottomTile {
@@ -69,14 +66,13 @@ impl RenderableTile for BottomTile {
 pub struct RightTile;
 impl SimpleTile for RightTile {
     type Identifier = TileType;
-    type Sides = RenderableSides;
 
     fn identifier(&self) -> Self::Identifier {
         TileType::Right
     }
 
-    fn acceptable_sides(&self) -> Vec<Self::Sides> {
-        enums!(RenderableSides:{Top, Bottom, Right})
+    fn acceptable_sides(&self) -> Vec<Side> {
+        enums!(Side:{Top, Bottom, Right})
     }
 }
 impl RenderableTile for RightTile {
