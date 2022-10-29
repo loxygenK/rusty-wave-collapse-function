@@ -1,4 +1,4 @@
-use f4n_wcf_core::tiles::Tile;
+use f4n_wcf_core::tile::Tile;
 
 #[derive(Eq, PartialEq)]
 pub enum RenderableSides {

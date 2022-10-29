@@ -1,6 +1,6 @@
-pub mod tiles;
+pub mod field;
 pub mod macros;
-pub mod wfc;
+pub mod tile;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right

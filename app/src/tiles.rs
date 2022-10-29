@@ -1,85 +1,85 @@
-use f4n_wcf_core::tiles::{Tile, SimpleTile};
+use f4n_wcf_core::tile::SimpleTile;
 use f4n_wcf_visualizer::renderable_tiles::{RenderableTile, RenderableSides};
 
-#[derive(Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub enum TileType {
-    TopHorn,
-    LeftHorn,
-    BottomHorn,
-    RightHorn
+    Top,
+    Left,
+    Bottom,
+    Right
 }
 
-pub struct TopHornTile;
-impl SimpleTile for TopHornTile {
+pub struct TopTile;
+impl SimpleTile for TopTile {
     type Identifier = TileType;
     type Sides = RenderableSides;
 
     fn identifier(&self) -> Self::Identifier {
-        TileType::TopHorn
+        TileType::Top
     }
 
     fn acceptable_sides(&self) -> Vec<Self::Sides> {
         enums!(RenderableSides:{Top, Left, Right})
     }
 }
-impl RenderableTile for TopHornTile {
+impl RenderableTile for TopTile {
     fn get_image_path(&self) -> String {
         "images/top.png".to_string()
     }
 }
 
-pub struct LeftHornTile;
-impl SimpleTile for LeftHornTile {
+pub struct LeftTile;
+impl SimpleTile for LeftTile {
     type Identifier = TileType;
     type Sides = RenderableSides;
 
     fn identifier(&self) -> Self::Identifier {
-        TileType::LeftHorn
+        TileType::Left
     }
 
     fn acceptable_sides(&self) -> Vec<Self::Sides> {
         enums!(RenderableSides:{Top, Bottom, Left})
     }
 }
-impl RenderableTile for LeftHornTile {
+impl RenderableTile for LeftTile {
     fn get_image_path(&self) -> String {
         "images/left.png".to_string()
     }
 }
 
-pub struct BottomHornTile;
-impl SimpleTile for BottomHornTile {
+pub struct BottomTile;
+impl SimpleTile for BottomTile {
     type Identifier = TileType;
     type Sides = RenderableSides;
 
     fn identifier(&self) -> Self::Identifier {
-        TileType::BottomHorn
+        TileType::Bottom
     }
 
     fn acceptable_sides(&self) -> Vec<Self::Sides> {
         enums!(RenderableSides:{Bottom, Left, Right})
     }
 }
-impl RenderableTile for BottomHornTile {
+impl RenderableTile for BottomTile {
     fn get_image_path(&self) -> String {
         "images/bottom.png".to_string()
     }
 }
 
-pub struct RightHornTile;
-impl SimpleTile for RightHornTile {
+pub struct RightTile;
+impl SimpleTile for RightTile {
     type Identifier = TileType;
     type Sides = RenderableSides;
 
     fn identifier(&self) -> Self::Identifier {
-        TileType::RightHorn
+        TileType::Right
     }
 
     fn acceptable_sides(&self) -> Vec<Self::Sides> {
         enums!(RenderableSides:{Top, Bottom, Right})
     }
 }
-impl RenderableTile for RightHornTile {
+impl RenderableTile for RightTile {
     fn get_image_path(&self) -> String {
         "images/right.png".to_string()
     }

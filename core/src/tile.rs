@@ -1,5 +1,5 @@
 pub trait Tile {
-    type Identifier: Eq;
+    type Identifier: Eq + Clone;
     type Sides: Eq;
 
     fn identifier(&self) -> Self::Identifier;
@@ -10,7 +10,7 @@ pub trait Tile {
 }
 
 pub trait SimpleTile {
-    type Identifier: Eq;
+    type Identifier: Eq + Clone;
     type Sides: Eq;
 
     fn identifier(&self) -> Self::Identifier;
