@@ -1,6 +1,6 @@
 use rand::prelude::*;
 
-use std::marker::PhantomData;
+use std::fmt::{Display, Debug};
 
 use crate::{tile::Tile, side::{ALL_SIDES, Side}};
 
@@ -54,15 +54,14 @@ impl<'tiles, Id: Eq + Clone> TileSet<'tiles, Id> {
 }
 
 
-pub struct Field<'tiles, Id: Eq + Clone, Sides: Eq> {
+pub struct Field<'tiles, Id: Eq + Clone> {
     tile_possibility_map: Vec<Vec<TilePossibility<Id>>>,
     tiles: TileSet<'tiles, Id>,
     width: usize,
     height: usize,
-    _phantom: PhantomData<Sides>
 }
 
-impl<'tiles, Id: Eq + Clone, Sides: Eq> Field<'tiles, Id, Sides> {
+impl<'tiles, Id: Eq + Clone> Field<'tiles, Id> {
     pub fn new(
         tiles: &'tiles [&'tiles dyn Tile<Identifier = Id>],
         width: usize,
@@ -76,8 +75,7 @@ impl<'tiles, Id: Eq + Clone, Sides: Eq> Field<'tiles, Id, Sides> {
             tile_possibility_map: vec![vec! [ TilePossibility::new(possible_tiles_id); width ]; height],
             tiles: TileSet::new(tiles),
             width,
-            height,
-            _phantom: PhantomData
+            height
         }
     }
 
@@ -107,6 +105,24 @@ impl<'tiles, Id: Eq + Clone, Sides: Eq> Field<'tiles, Id, Sides> {
 
     pub fn is_in_field(&self, (x, y): (usize, usize)) -> bool {
         (0..self.width).contains(&x) && (0..self.height).contains(&y)
+    }
+
+    pub fn to_id_vec(&self) -> Vec<Vec<Option<Id>>> {
+        let mut id_vec: Vec<Vec<Option<Id>>> = vec![vec![ None; self.width ]; self.height];
+
+        (0..self.height).for_each(|y| {
+            (0..self.width).for_each(|x| {
+                id_vec[y][x] = self
+                    .at((x, y))
+                    .expect("Must success, since x, y counts only inside the valid area")
+                    .get_collapsed()
+                    .ok()
+                    .flatten()
+                    .cloned();
+            });
+        });
+
+        id_vec
     }
 
     pub fn collapse_tiles(&mut self) {
@@ -139,7 +155,7 @@ impl<'tiles, Id: Eq + Clone, Sides: Eq> Field<'tiles, Id, Sides> {
                 let possibility = self.at((x, y))
                     .expect("Must success, since x, y is looped inside width and height!");
 
-                if possibility.possible_tiles.len() < smallest && possibility.collapsed() {
+                if possibility.possible_tiles.len() < smallest && !possibility.collapsed() {
                     coord = Some((x, y));
                     smallest = possibility.possible_tiles.len();
                 }
@@ -150,27 +166,116 @@ impl<'tiles, Id: Eq + Clone, Sides: Eq> Field<'tiles, Id, Sides> {
     }
 
     fn collapse_tile(&mut self, base_coord: (usize, usize), side: Side) -> Option<()> {
-        let base = self.at(base_coord)?;
-        let base_id = base.get_collapsed().expect("Base must be collapsed")?;
-        let base_tile = self.tiles.get(base_id)?;
-        let neighbor = self.at(side.of(base_coord))?;
+        let neighbor = self.at(side.of(base_coord)?)?;
+        if neighbor.collapsed() {
+            return Some(());
+        }
 
         let possible_tiles = neighbor
             .possible_tiles
             .iter()
             .filter(|tile_id| {
                 let possible_neighbor_tile = self.tiles.get(tile_id).unwrap();
-                let acceptable_sides = base_tile.connect(&**possible_neighbor_tile);
-
-                acceptable_sides.contains(&side)
+                self.is_possible(base_coord, side, *possible_neighbor_tile).unwrap_or(false)
             })
             .map(Clone::clone)
             .collect::<Vec<_>>();
 
-        self.at_mut(side.of(base_coord))
+        self.at_mut(side.of(base_coord)?)
             .unwrap()
             .set_possible_tiles(possible_tiles);
 
         Some(())
     }
+
+    fn is_possible(&self, base_coord: (usize, usize), side: Side, tile: &dyn Tile<Identifier = Id>) -> Option<bool> {
+        let base = self.at(base_coord).expect("Must be in the valid range");
+        let base_id = base.get_collapsed().expect("Base must be collapsed")?;
+        let base_tile = self.tiles.get(base_id).expect("Must be existing ID");
+        let neighbor_coord = side.of(base_coord);
+
+        if neighbor_coord.is_none() {
+            return Some(true);
+        }
+
+        let base_connectivity = base_tile.connect(tile, side);
+        let neighbor_connectivity = tile.connect(*base_tile, side.facing());
+        Some(base_connectivity == neighbor_connectivity)
+    }
+
+    fn format_as_tile(
+        &self,
+        formatter: impl Fn(&TilePossibility<Id>) -> String
+    ) -> String {
+        self.tile_possibility_map.iter()
+            .map(|row| {
+                row.iter()
+                    .map(|tile| formatter(tile))
+                    .collect::<Vec<_>>()
+                    .join("")
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
 }
+
+impl<Id: Eq + Clone + Debug> Debug for Field<'_, Id> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let max = self.tiles.tiles
+            .iter()
+            .map(|m| format!("{:#?}", m.identifier()).chars().count())
+            .max()
+            .ok_or(std::fmt::Error)?;
+
+        let maximum_length = max * (self.tiles.tiles.len() * 2 - 1);
+
+        let formatted = self.format_as_tile(|tile| {
+            let unpadded = tile.possible_tiles
+                .iter()
+                .map(|m| { format!("{:#?}", m) })
+                .collect::<Vec<_>>()
+                .join(" ");
+
+            format!(
+                "\x1b[38;5;{}m[ {}{} ]{}",
+                if tile.collapsed() {
+                    "3;1"
+                } else if tile.possible_tiles.len() == self.tiles.tiles.len() {
+                    "4"
+                } else {
+                    "7"
+                },
+                unpadded,
+                " ".repeat(maximum_length - unpadded.chars().count()),
+                "\x1b[m"
+            )
+        });
+        f.write_str(&formatted)
+    }
+}
+
+impl<Id: Eq + Clone + Display> Display for Field<'_, Id> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let max = self.tiles.tiles
+            .iter()
+            .map(|m| format!("{}", m.identifier()).chars().count())
+            .max()
+            .ok_or(std::fmt::Error)?;
+
+        let formatted = self.format_as_tile(|tile| {
+            let unformatted = tile.get_collapsed()
+                .ok()
+                .flatten()
+                .map(|m| { format!("{}", m) })
+                .unwrap_or_else(|| "･".to_string());
+
+            format!(
+                "{}{}",
+                unformatted,
+                " ".repeat(max - unformatted.chars().count()),
+            )
+        });
+
+        f.write_str(&formatted)
+    }
+} 

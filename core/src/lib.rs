@@ -3,6 +3,7 @@ pub mod macros;
 pub mod tile;
 pub mod side;
 pub mod simple_tile;
+pub mod wfc;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right

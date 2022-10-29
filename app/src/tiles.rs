@@ -1,3 +1,5 @@
+use std::fmt::{Display, Debug, Write};
+
 use f4n_wcf_core::{simple_tile::SimpleTile, side::Side};
 use f4n_wcf_visualizer::renderable_tiles::RenderableTile;
 
@@ -7,6 +9,23 @@ pub enum TileType {
     Left,
     Bottom,
     Right
+}
+impl Display for TileType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let char = match self {
+            TileType::Top => '┴',
+            TileType::Left => '┤',
+            TileType::Bottom => '┬',
+            TileType::Right => '├',
+        };
+
+        f.write_char(char)
+    }
+}
+impl Debug for TileType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(self, f)
+    }
 }
 
 pub struct TopTile;
@@ -80,4 +99,3 @@ impl RenderableTile for RightTile {
         "images/right.png".to_string()
     }
 }
-

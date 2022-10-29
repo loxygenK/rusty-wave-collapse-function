@@ -23,12 +23,9 @@ impl<T: SimpleTile> Tile for T {
 
     fn connect(
         &self,
-        tile: &dyn Tile<Identifier = Self::Identifier>
-    ) -> Vec<Side> {
-        if self.accept(tile) {
-            self.acceptable_sides()
-        } else {
-            Vec::new()
-        }
+        tile: &dyn Tile<Identifier = Self::Identifier>,
+        side: Side
+    ) -> bool {
+        self.accept(tile) && self.acceptable_sides().contains(&side)
     }
 }
