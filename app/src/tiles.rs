@@ -1,4 +1,4 @@
-use f4n_wcf_core::{tile::SimpleTile, side::Side};
+use f4n_wcf_core::{simple_tile::SimpleTile, side::Side};
 use f4n_wcf_visualizer::renderable_tiles::RenderableTile;
 
 #[derive(Clone, Eq, PartialEq)]
