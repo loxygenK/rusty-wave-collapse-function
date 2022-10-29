@@ -1,3 +1,5 @@
+use rand::prelude::*;
+
 use std::marker::PhantomData;
 
 use crate::tile::Tile;
@@ -29,8 +31,16 @@ impl<Id: Eq + Clone> TilePossibility<Id> {
         Self { possible_tiles }
     }
 
+    pub fn collapse(&mut self, tile: Id) {
+        self.possible_tiles = vec![tile];
+    }
+
     pub fn collapsed(&self) -> bool {
         self.possible_tiles.len() < 2
+    }
+
+    pub fn pick_random<R: Rng>(&self, rng: &mut R) -> Option<&Id> {
+        self.possible_tiles.choose(rng)
     }
 }
 
@@ -60,9 +70,13 @@ impl<Id: Eq + Clone, Sides: Eq> Field<Id, Sides> {
     }
 
     pub fn at(&self, x: usize, y: usize) -> Option<&TilePossibility<Id>> {
+        self.at_mut(x, y).map(|tile| &*tile)
+    }
+
+    pub fn at_mut(&mut self, x: usize, y: usize) -> Option<&mut TilePossibility<Id>> {
         self.tiles
-            .get(y)
-            .and_then(|row| row.get(x))
+            .get_mut(y)
+            .and_then(|row| row.get_mut(x))
     }
 
     pub fn tiles(&self) -> &[Vec<TilePossibility<Id>>] {
@@ -78,15 +92,24 @@ impl<Id: Eq + Clone, Sides: Eq> Field<Id, Sides> {
     }
 
     pub fn collapse_tiles(&mut self) {
-        while let Some((tile, (x, y))) = self.select_least_possible() {
+        let mut rng = rand::thread_rng();
+
+        while let Some((x, y)) = self.select_least_possible() {
+            let tile = self.at_mut(x, y)
+                .expect("Must success, since select_least_possible only picks from valid range");
+
+            let picked = tile
+                .pick_random(&mut rng)
+                .expect("Must success, since select_least_possible only picks uncollapsed (= non-empty) one");
+
+            tile.collapse(picked.clone());
         }
     }
 
-    fn select_least_possible(&self) -> Option<(&TilePossibility<Id>, (usize, usize))> {
+    fn select_least_possible(&self) -> Option<(usize, usize)> {
         // TODO: Making thing working in gool ol' nested for loop - can I make this more fancy
         // using iterator?
         let mut smallest = usize::MAX;
-        let mut tile: Option<&TilePossibility<Id>> = None;
         let mut coord: Option<(usize, usize)> = None;
 
         for y in 0..self.height {
@@ -96,12 +119,11 @@ impl<Id: Eq + Clone, Sides: Eq> Field<Id, Sides> {
 
                 if possibility.possible_tiles.len() < smallest && possibility.collapsed() {
                     coord = Some((x, y));
-                    tile = Some(possibility);
                     smallest = possibility.possible_tiles.len();
                 }
             }
         }
 
-        tile.zip(coord)
+        coord
     }
 }
