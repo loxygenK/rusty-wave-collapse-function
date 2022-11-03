@@ -5,7 +5,7 @@ use std::fmt::{Display, Debug};
 
 use crate::{tile::Tile, side::{ALL_SIDES, Side}};
 
-#[derive(Default, Clone)]
+#[derive(Default, Clone, PartialEq, Eq)]
 pub struct TilePossibility<Id: Eq + Clone> {
     possible_tiles: Vec<Id>
 }
@@ -40,7 +40,7 @@ impl<Id: Eq + Clone> TilePossibility<Id> {
     }
 }
 
-
+#[derive(PartialEq, Eq)]
 pub struct Field<'tiles, Id: Eq + Clone> {
     tile_possibility_map: Vec<Vec<TilePossibility<Id>>>,
     tiles: TileSet<'tiles, Id>,

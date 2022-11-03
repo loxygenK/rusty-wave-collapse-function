@@ -4,7 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+getrandom = { version = "0.2.8", features = ["js"] }
 f4n-wcf-core = { path = "../core" }
-f4n-wcf-visualizer = { path = "../visualizer" }
+f4n-wcf-visualizer = { path = "../visualizer", optional = true }
+
+[features]
+default = []
+wasm = ["f4n-wcf-core/wasm", "f4n-wcf-visualizer"]

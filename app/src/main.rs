@@ -1,6 +1,8 @@
 use f4n_wcf_core::{tile::Tile, wfc::execute_wfc};
-use f4n_wcf_visualizer::start;
 use tiles::{TopTile, LeftTile, BottomTile, RightTile, TileType};
+
+#[cfg(feature = "wasm")]
+use f4n_wcf_visualizer::start;
 
 #[macro_use]
 extern crate f4n_wcf_core;
@@ -15,6 +17,11 @@ fn main() {
         &RightTile,
     ];
 
-    let collapsed = execute_wfc(tiles, 3, 3);
+    let collapsed = execute_wfc(tiles, 15, 15);
+
+    #[cfg(feature = "wasm")]
     start(collapsed);
+
+    #[cfg(not(feature = "wasm"))]
+    println!("{}", collapsed);
 }

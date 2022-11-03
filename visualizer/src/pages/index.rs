@@ -1,15 +1,20 @@
 use std::marker::PhantomData;
 
+use f4n_wcf_core::field::Field;
 use yew::prelude::*;
-use crate::components::heading::Heading;
+
+use crate::{
+    components::{Heading, FieldGrid},
+    js::console
+};
 
 pub struct IndexPage<Id> {
-    _phantom: PhantomData<Id>,
+    _phantom: PhantomData<Id>
 }
 
 #[derive(PartialEq, Eq, Properties)]
-pub struct IndexPageProps<Id: Eq + Clone> {
-    pub field: Vec<Vec<Option<Id>>>
+pub struct IndexPageProps<Id: Eq + Clone + 'static> {
+    pub field: Field<'static, Id>
 }
 
 impl<Id: Eq + Clone + 'static> Component for IndexPage<Id> {
@@ -20,21 +25,19 @@ impl<Id: Eq + Clone + 'static> Component for IndexPage<Id> {
         IndexPage { _phantom: PhantomData }
     }
 
-    fn view(&self, _ctx: &Context<Self>) -> Html {
+    fn view(&self, ctx: &Context<Self>) -> Html {
+        console::log("Hello, world!");
+
+        let field = &ctx.props().field;
+
         html! {
-            <Heading />
+            <>
+                <Heading />
+                <FieldGrid
+                    width={field.width()}
+                    height={field.height()}
+                />
+            </>
         }
     }
-
-    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
-        false
-    }
-
-    fn changed(&mut self, ctx: &Context<Self>) -> bool {
-        true
-    }
-
-    fn rendered(&mut self, ctx: &Context<Self>, first_render: bool) {}
-
-    fn destroy(&mut self, ctx: &Context<Self>) {}
 }

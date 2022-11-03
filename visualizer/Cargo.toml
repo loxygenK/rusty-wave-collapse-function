@@ -8,3 +8,7 @@ edition = "2021"
 [dependencies]
 yew = "0.19.3"
 f4n-wcf-core = { path = "../core" }
+stylist = { version = "0.10.1", features = ["macros"] }
+once_cell = "1.16.0"
+wasm-bindgen = { version = "0.2.83" }
+itertools = "0.10.5"

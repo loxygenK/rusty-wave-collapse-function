@@ -1,4 +1,5 @@
 use yew::prelude::*;
+use super::heading_css::*;
 
 pub struct Heading;
 
@@ -12,9 +13,14 @@ impl Component for Heading {
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html! {
-            <h1>
-                {"Wave Collapse Function Visliazer"}
-            </h1>
+            <header class={heading()}>
+                <h1 class={page_title()}>
+                    {"Wave Collapse Function Visliazer"}
+                </h1>
+                <span class={page_description()}>
+                    {"Trying to implement WCF in Rust 🦀"}
+                </span>
+            </header>
         }
     }
 }

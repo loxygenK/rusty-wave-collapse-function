@@ -14,6 +14,22 @@ pub trait Tile {
 pub struct TileSet<'tiles, Id: Eq + Clone> {
     pub tiles: &'tiles [&'tiles dyn Tile<Identifier = Id>],
 }
+impl<'tiles, Id: Eq + Clone> PartialEq for TileSet<'tiles, Id> {
+    fn eq(&self, other: &Self) -> bool {
+        if self.tiles.len() != other.tiles.len() {
+            return false;
+        }
+
+        let other_tile_ids = other.tiles.iter()
+            .map(|t| t.identifier())
+            .collect::<Vec<_>>();
+
+        self.tiles
+            .iter()
+            .all(|t| other_tile_ids.contains(&t.identifier()))
+    }
+}
+impl<'tiles, Id: Eq + Clone> Eq for TileSet<'tiles, Id> {  }
 
 impl<'tiles, Id: Eq + Clone> TileSet<'tiles, Id> {
     pub fn new(tiles: &'tiles [&'tiles dyn Tile<Identifier = Id>]) -> Self {
