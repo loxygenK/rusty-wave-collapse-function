@@ -15,3 +15,8 @@ css_fn!(field(width: usize, height: usize) {
         }}
     ", width, height)
 });
+
+define_css!(tile_image, style!(r"
+    width: 100%;
+    height: 100%;
+"));

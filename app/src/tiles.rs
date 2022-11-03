@@ -1,6 +1,8 @@
 use std::fmt::{Display, Debug, Write};
 
 use f4n_wcf_core::{simple_tile::SimpleTile, side::Side};
+
+#[cfg(feature = "wasm")]
 use f4n_wcf_visualizer::renderable_tiles::RenderableTile;
 
 #[derive(Clone, Eq, PartialEq)]
@@ -40,6 +42,7 @@ impl SimpleTile for TopTile {
         enums!(Side:{Top, Left, Right})
     }
 }
+#[cfg(feature = "wasm")]
 impl RenderableTile for TopTile {
     fn get_image_path(&self) -> String {
         "images/top.png".to_string()
@@ -58,6 +61,7 @@ impl SimpleTile for LeftTile {
         enums!(Side:{Top, Bottom, Left})
     }
 }
+#[cfg(feature = "wasm")]
 impl RenderableTile for LeftTile {
     fn get_image_path(&self) -> String {
         "images/left.png".to_string()
@@ -76,6 +80,7 @@ impl SimpleTile for BottomTile {
         enums!(Side:{Bottom, Left, Right})
     }
 }
+#[cfg(feature = "wasm")]
 impl RenderableTile for BottomTile {
     fn get_image_path(&self) -> String {
         "images/bottom.png".to_string()
@@ -94,6 +99,7 @@ impl SimpleTile for RightTile {
         enums!(Side:{Top, Bottom, Right})
     }
 }
+#[cfg(feature = "wasm")]
 impl RenderableTile for RightTile {
     fn get_image_path(&self) -> String {
         "images/right.png".to_string()

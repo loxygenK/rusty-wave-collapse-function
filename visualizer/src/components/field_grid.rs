@@ -22,7 +22,13 @@ impl Component for FieldGrid {
     fn view(&self, ctx: &Context<Self>) -> Html {
         let tile = (0..(ctx.props().width)).cartesian_product(0..(ctx.props().height))
             .into_iter()
-            .map(|(x, y)| html!(<li>{x + 1}{","}{y + 1}</li>))
+            .map(|(x, y)| html!(
+                <img
+                    src="/public/images/top.png"
+                    class={tile_image()}
+                    alt={format!("{}, {}", x, y)}
+                />
+            ))
             .collect::<Vec<_>>();
 
         html! {
