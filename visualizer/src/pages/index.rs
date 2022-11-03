@@ -1,11 +1,11 @@
-use std::marker::PhantomData;
+use std::{marker::PhantomData, rc::Rc};
 
 use f4n_wcf_core::field::Field;
 use yew::prelude::*;
 
 use crate::{
     components::{Heading, FieldGrid},
-    js::console
+    js::console, renderable_tiles::RenderableTileId
 };
 
 pub struct IndexPage<Id> {
@@ -13,11 +13,11 @@ pub struct IndexPage<Id> {
 }
 
 #[derive(PartialEq, Eq, Properties)]
-pub struct IndexPageProps<Id: Eq + Clone + 'static> {
-    pub field: Field<'static, Id>
+pub struct IndexPageProps<Id: RenderableTileId> {
+    pub field: Rc<Field<'static, Id>>
 }
 
-impl<Id: Eq + Clone + 'static> Component for IndexPage<Id> {
+impl<Id: RenderableTileId> Component for IndexPage<Id> {
     type Message = ();
     type Properties = IndexPageProps<Id>;
 
@@ -28,15 +28,12 @@ impl<Id: Eq + Clone + 'static> Component for IndexPage<Id> {
     fn view(&self, ctx: &Context<Self>) -> Html {
         console::log("Hello, world!");
 
-        let field = &ctx.props().field;
+        let field = ctx.props().field.clone();
 
         html! {
             <>
                 <Heading />
-                <FieldGrid
-                    width={field.width()}
-                    height={field.height()}
-                />
+                <FieldGrid<Id> field={field} />
             </>
         }
     }

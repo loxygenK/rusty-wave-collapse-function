@@ -1,5 +1,3 @@
-use f4n_wcf_core::tile::Tile;
-
-pub trait RenderableTile: Tile {
+pub trait RenderableTileId: Eq + Clone + 'static {
     fn get_image_path(&self) -> String;
 }

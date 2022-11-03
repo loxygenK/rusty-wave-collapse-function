@@ -3,7 +3,7 @@ use std::fmt::{Display, Debug, Write};
 use f4n_wcf_core::{simple_tile::SimpleTile, side::Side};
 
 #[cfg(feature = "wasm")]
-use f4n_wcf_visualizer::renderable_tiles::RenderableTile;
+use f4n_wcf_visualizer::renderable_tiles::RenderableTileId;
 
 #[derive(Clone, Eq, PartialEq)]
 pub enum TileType {
@@ -29,6 +29,17 @@ impl Debug for TileType {
         Display::fmt(self, f)
     }
 }
+#[cfg(feature = "wasm")]
+impl RenderableTileId for TileType {
+    fn get_image_path(&self) -> String {
+        match self {
+            TileType::Top => "images/top.png",
+            TileType::Left => "images/left.png",
+            TileType::Bottom => "images/bottom.png",
+            TileType::Right => "images/right.png",
+        }.to_string()
+    }
+}
 
 pub struct TopTile;
 impl SimpleTile for TopTile {
@@ -40,12 +51,6 @@ impl SimpleTile for TopTile {
 
     fn acceptable_sides(&self) -> Vec<Side> {
         enums!(Side:{Top, Left, Right})
-    }
-}
-#[cfg(feature = "wasm")]
-impl RenderableTile for TopTile {
-    fn get_image_path(&self) -> String {
-        "images/top.png".to_string()
     }
 }
 
@@ -61,12 +66,6 @@ impl SimpleTile for LeftTile {
         enums!(Side:{Top, Bottom, Left})
     }
 }
-#[cfg(feature = "wasm")]
-impl RenderableTile for LeftTile {
-    fn get_image_path(&self) -> String {
-        "images/left.png".to_string()
-    }
-}
 
 pub struct BottomTile;
 impl SimpleTile for BottomTile {
@@ -80,12 +79,6 @@ impl SimpleTile for BottomTile {
         enums!(Side:{Bottom, Left, Right})
     }
 }
-#[cfg(feature = "wasm")]
-impl RenderableTile for BottomTile {
-    fn get_image_path(&self) -> String {
-        "images/bottom.png".to_string()
-    }
-}
 
 pub struct RightTile;
 impl SimpleTile for RightTile {
@@ -97,11 +90,5 @@ impl SimpleTile for RightTile {
 
     fn acceptable_sides(&self) -> Vec<Side> {
         enums!(Side:{Top, Bottom, Right})
-    }
-}
-#[cfg(feature = "wasm")]
-impl RenderableTile for RightTile {
-    fn get_image_path(&self) -> String {
-        "images/right.png".to_string()
     }
 }

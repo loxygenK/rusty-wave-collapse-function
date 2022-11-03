@@ -42,10 +42,10 @@ impl<Id: Eq + Clone> TilePossibility<Id> {
 
 #[derive(PartialEq, Eq)]
 pub struct Field<'tiles, Id: Eq + Clone> {
-    tile_possibility_map: Vec<Vec<TilePossibility<Id>>>,
-    tiles: TileSet<'tiles, Id>,
-    width: usize,
-    height: usize,
+    pub tile_possibility_map: Vec<Vec<TilePossibility<Id>>>,
+    pub tiles: TileSet<'tiles, Id>,
+    pub width: usize,
+    pub height: usize,
 }
 
 impl<'tiles, Id: Eq + Clone> Field<'tiles, Id> {

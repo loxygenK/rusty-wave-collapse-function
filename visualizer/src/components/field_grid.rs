@@ -1,38 +1,61 @@
+use std::{marker::PhantomData, rc::Rc};
+
+use f4n_wcf_core::field::Field;
 use yew::prelude::*;
 use itertools::Itertools;
 
+use crate::{
+    components::GridTile,
+    renderable_tiles::RenderableTileId
+};
+
 use super::field_grid_css::*;
 
-pub struct FieldGrid;
-
-#[derive(Properties, PartialEq, Eq)]
-pub struct FieldGridProps {
-    pub width: usize,
-    pub height: usize
+pub struct FieldGrid<Id: RenderableTileId> {
+    _phantom: PhantomData<Id>
 }
 
-impl Component for FieldGrid {
+#[derive(Properties, PartialEq, Eq)]
+pub struct FieldGridProps<Id: RenderableTileId> {
+    pub field: Rc<Field<'static, Id>>
+}
+
+impl<Id: RenderableTileId> Component for FieldGrid<Id> {
     type Message = ();
-    type Properties = FieldGridProps;
+    type Properties = FieldGridProps<Id>;
 
     fn create(_ctx: &Context<Self>) -> Self {
-        FieldGrid
+        FieldGrid {
+            _phantom: PhantomData
+        }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let tile = (0..(ctx.props().width)).cartesian_product(0..(ctx.props().height))
+        let field = &ctx.props().field;
+
+        let tile = (0..(field.width)).cartesian_product(0..(field.height))
             .into_iter()
-            .map(|(x, y)| html!(
-                <img
-                    src="/public/images/top.png"
-                    class={tile_image()}
-                    alt={format!("{}, {}", x, y)}
-                />
-            ))
+            .map(|coord| {
+                ctx.props().field
+                    .at(coord)
+                    .unwrap()
+                    .get_collapsed()
+                    .ok()
+                    .flatten()
+                    .and_then(|id| field.tiles.get(id))
+                    .map(|tile| html!(
+                        <ul>
+                            <GridTile
+                                image={format!("/public/{}", tile.identifier().get_image_path())}
+                            />
+                        </ul>
+                    ))
+                    .unwrap_or_else(|| html!(<ul></ul>))
+            })
             .collect::<Vec<_>>();
 
         html! {
-            <ul class={field(ctx.props().width, ctx.props().height)}>
+            <ul class={field_grid(field.width, field.height)}>
                 {tile}
             </ul>
         }
