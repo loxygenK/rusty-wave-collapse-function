@@ -1,4 +1,5 @@
 use f4n_wcf_core::{tile::Tile, wfc::execute_wfc};
+use f4n_wcf_visualizer::start;
 use tiles::{TopTile, LeftTile, BottomTile, RightTile, TileType};
 
 #[macro_use]
@@ -15,10 +16,5 @@ fn main() {
     ];
 
     let collapsed = execute_wfc(tiles, 3, 3);
-
-    println!("{}", collapsed);
-
-    // collapsed.to_id_vec().iter().for_each(|row| {
-    //     println!("{:#?}", row);
-    // });
+    start(collapsed);
 }

@@ -1,3 +1,4 @@
+use crate::tile::TileSet;
 use rand::prelude::*;
 
 use std::fmt::{Display, Debug};
@@ -36,20 +37,6 @@ impl<Id: Eq + Clone> TilePossibility<Id> {
 
     pub fn pick_random<R: Rng>(&self, rng: &mut R) -> Option<&Id> {
         self.possible_tiles.choose(rng)
-    }
-}
-
-pub struct TileSet<'tiles, Id: Eq + Clone> {
-    tiles: &'tiles [&'tiles dyn Tile<Identifier = Id>],
-}
-
-impl<'tiles, Id: Eq + Clone> TileSet<'tiles, Id> {
-    pub fn new(tiles: &'tiles [&'tiles dyn Tile<Identifier = Id>]) -> Self {
-        Self { tiles }
-    }
-
-    pub fn get(&self, id: &Id) -> Option<&&dyn Tile<Identifier = Id>> {
-        self.tiles.iter().find(|tile| tile.identifier() == *id)
     }
 }
 
