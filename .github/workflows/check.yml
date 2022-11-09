@@ -6,10 +6,10 @@ on:
       - main
 
 jobs:
-  check:
+  clippy:
     runs-on: ubuntu-latest
 
-    clippy:
+    steps:
       - name: Clone and checkout into the repository
         uses: actions/checkout@v3
 
