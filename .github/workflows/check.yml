@@ -5,10 +5,11 @@ jobs:
   check:
     runs-on: ubuntu-latest
 
-    matrix:
-      command:
-        - clippy
-        - fmt
+    strategy:
+      matrix:
+        command:
+          - clippy
+          - fmt
 
     steps:
       - name: Clone and checkout into the repository
@@ -16,6 +17,9 @@ jobs:
 
       - name: Prepare Rust toolchain
         uses: actions-rs/toolchain@v1
+
+      - name: Swatinem/rust-cache@v2
+
 
       - name: Execute ${{ matrix.command }}
         uses: actions-rs/cargo@v1
