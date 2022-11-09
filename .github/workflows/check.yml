@@ -17,6 +17,9 @@ jobs:
 
       - name: Prepare Rust toolchain
         uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-unknown-linux-gnu
 
       - name: Cache Rust stuff
         uses: Swatinem/rust-cache@v2
