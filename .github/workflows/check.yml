@@ -18,8 +18,8 @@ jobs:
       - name: Prepare Rust toolchain
         uses: actions-rs/toolchain@v1
 
-      - name: Swatinem/rust-cache@v2
-
+      - name: Cache Rust stuff
+        uses: Swatinem/rust-cache@v2
 
       - name: Execute ${{ matrix.command }}
         uses: actions-rs/cargo@v1
