@@ -1,6 +1,6 @@
-use std::fmt::{Display, Debug, Write};
+use std::fmt::{Debug, Display, Write};
 
-use f4n_wcf_core::{simple_tile::SimpleTile, side::Side};
+use f4n_wcf_core::{side::Side, simple_tile::SimpleTile};
 
 #[cfg(feature = "wasm")]
 use f4n_wcf_visualizer::renderable_tiles::RenderableTileId;
@@ -10,7 +10,7 @@ pub enum TileType {
     Top,
     Left,
     Bottom,
-    Right
+    Right,
 }
 impl Display for TileType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -37,7 +37,8 @@ impl RenderableTileId for TileType {
             TileType::Left => "images/left.png",
             TileType::Bottom => "images/bottom.png",
             TileType::Right => "images/right.png",
-        }.to_string()
+        }
+        .to_string()
     }
 }
 

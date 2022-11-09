@@ -1,23 +1,20 @@
 use std::{marker::PhantomData, rc::Rc};
 
 use f4n_wcf_core::field::Field;
-use yew::prelude::*;
 use itertools::Itertools;
+use yew::prelude::*;
 
-use crate::{
-    components::GridTile,
-    renderable_tiles::RenderableTileId
-};
+use crate::{components::GridTile, renderable_tiles::RenderableTileId};
 
 use super::field_grid_css::*;
 
 pub struct FieldGrid<Id: RenderableTileId> {
-    _phantom: PhantomData<Id>
+    _phantom: PhantomData<Id>,
 }
 
 #[derive(Properties, PartialEq, Eq)]
 pub struct FieldGridProps<Id: RenderableTileId> {
-    pub field: Rc<Field<'static, Id>>
+    pub field: Rc<Field<'static, Id>>,
 }
 
 impl<Id: RenderableTileId> Component for FieldGrid<Id> {
@@ -26,14 +23,15 @@ impl<Id: RenderableTileId> Component for FieldGrid<Id> {
 
     fn create(_ctx: &Context<Self>) -> Self {
         FieldGrid {
-            _phantom: PhantomData
+            _phantom: PhantomData,
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         let field = &ctx.props().field;
 
-        let tile = (0..(field.width)).cartesian_product(0..(field.height))
+        let tile = (0..(field.width))
+            .cartesian_product(0..(field.height))
             .into_iter()
             .map(|coord| {
                 ctx.props().field

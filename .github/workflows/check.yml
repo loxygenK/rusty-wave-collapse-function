@@ -1,0 +1,51 @@
+on:
+  pull_request:
+
+  push:
+    branches:
+      - main
+
+jobs:
+  clippy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone and checkout into the repository
+        uses: actions/checkout@v3
+
+      - name: Prepare Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-unknown-linux-gnu
+
+      - name: Cache Rust stuff
+        uses: Swatinem/rust-cache@v2
+
+      - name: Execute clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+
+  fmt:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone and checkout into the repository
+        uses: actions/checkout@v3
+
+      - name: Prepare Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-unknown-linux-gnu
+
+      - name: Cache Rust stuff
+        uses: Swatinem/rust-cache@v2
+
+      - name: Execute fmt
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --check --quiet
+

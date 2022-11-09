@@ -4,17 +4,18 @@ use f4n_wcf_core::field::Field;
 use yew::prelude::*;
 
 use crate::{
-    components::{Heading, FieldGrid},
-    js::console, renderable_tiles::RenderableTileId
+    components::{FieldGrid, Heading},
+    js::console,
+    renderable_tiles::RenderableTileId,
 };
 
 pub struct IndexPage<Id> {
-    _phantom: PhantomData<Id>
+    _phantom: PhantomData<Id>,
 }
 
 #[derive(PartialEq, Eq, Properties)]
 pub struct IndexPageProps<Id: RenderableTileId> {
-    pub field: Rc<Field<'static, Id>>
+    pub field: Rc<Field<'static, Id>>,
 }
 
 impl<Id: RenderableTileId> Component for IndexPage<Id> {
@@ -22,7 +23,9 @@ impl<Id: RenderableTileId> Component for IndexPage<Id> {
     type Properties = IndexPageProps<Id>;
 
     fn create(_ctx: &Context<Self>) -> Self {
-        IndexPage { _phantom: PhantomData }
+        IndexPage {
+            _phantom: PhantomData,
+        }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {

@@ -1,4 +1,4 @@
-use crate::{define_css, css_fn};
+use crate::{css_fn, define_css};
 
 css_fn!(field_grid(width: usize, height: usize) {
     format!(r"

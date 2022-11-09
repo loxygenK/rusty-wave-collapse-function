@@ -3,7 +3,7 @@ pub enum Side {
     Left,
     Top,
     Bottom,
-    Right
+    Right,
 }
 impl Side {
     pub fn of(&self, coord: (usize, usize)) -> Option<(usize, usize)> {
@@ -26,14 +26,9 @@ impl Side {
             Side::Left => Side::Right,
             Side::Top => Side::Bottom,
             Side::Bottom => Side::Top,
-            Side::Right => Side::Right
+            Side::Right => Side::Right,
         }
     }
 }
 
-pub const ALL_SIDES: [Side; 4] = [
-    Side::Left,
-    Side::Top,
-    Side::Bottom,
-    Side::Right
-];
+pub const ALL_SIDES: [Side; 4] = [Side::Left, Side::Top, Side::Bottom, Side::Right];
