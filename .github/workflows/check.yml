@@ -1,0 +1,24 @@
+on:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    matrix:
+      command:
+        - clippy
+        - fmt
+
+    steps:
+      - name: Clone and checkout into the repository
+        uses: actions/checkout@v3
+
+      - name: Prepare Rust toolchain
+        uses: actions-rs/toolchain@v1
+
+      - name: Execute ${{ matrix.command }}
+        uses: actions-rs/cargo@v1
+        with:
+          command: ${{ matrix.command }}
+
