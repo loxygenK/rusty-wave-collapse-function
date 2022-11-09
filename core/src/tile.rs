@@ -4,11 +4,7 @@ pub trait Tile {
     type Identifier: Eq + Clone;
 
     fn identifier(&self) -> Self::Identifier;
-    fn connect(
-        &self,
-        tile: &dyn Tile<Identifier = Self::Identifier>,
-        side: Side
-    ) -> bool;
+    fn connect(&self, tile: &dyn Tile<Identifier = Self::Identifier>, side: Side) -> bool;
 }
 
 pub struct TileSet<'tiles, Id: Eq + Clone> {
@@ -20,7 +16,9 @@ impl<'tiles, Id: Eq + Clone> PartialEq for TileSet<'tiles, Id> {
             return false;
         }
 
-        let other_tile_ids = other.tiles.iter()
+        let other_tile_ids = other
+            .tiles
+            .iter()
             .map(|t| t.identifier())
             .collect::<Vec<_>>();
 
@@ -29,7 +27,7 @@ impl<'tiles, Id: Eq + Clone> PartialEq for TileSet<'tiles, Id> {
             .all(|t| other_tile_ids.contains(&t.identifier()))
     }
 }
-impl<'tiles, Id: Eq + Clone> Eq for TileSet<'tiles, Id> {  }
+impl<'tiles, Id: Eq + Clone> Eq for TileSet<'tiles, Id> {}
 
 impl<'tiles, Id: Eq + Clone> TileSet<'tiles, Id> {
     pub fn new(tiles: &'tiles [&'tiles dyn Tile<Identifier = Id>]) -> Self {

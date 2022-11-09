@@ -1,5 +1,5 @@
-use yew::prelude::*;
 use super::heading_css::*;
+use yew::prelude::*;
 
 pub struct Heading;
 

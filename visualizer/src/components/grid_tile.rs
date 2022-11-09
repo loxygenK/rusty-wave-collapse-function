@@ -6,7 +6,7 @@ pub struct GridTile;
 
 #[derive(PartialEq, Eq, Properties)]
 pub struct GridTileProps {
-    pub image: String
+    pub image: String,
 }
 
 impl Component for GridTile {

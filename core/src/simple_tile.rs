@@ -1,4 +1,4 @@
-use crate::{tile::Tile, side::Side};
+use crate::{side::Side, tile::Tile};
 
 pub trait SimpleTile {
     type Identifier: Eq + Clone;
@@ -6,10 +6,7 @@ pub trait SimpleTile {
     fn identifier(&self) -> Self::Identifier;
     fn acceptable_sides(&self) -> Vec<Side>;
 
-    fn accept(
-        &self,
-        _tile: &dyn Tile<Identifier = Self::Identifier>
-    ) -> bool {
+    fn accept(&self, _tile: &dyn Tile<Identifier = Self::Identifier>) -> bool {
         true
     }
 }
@@ -21,11 +18,7 @@ impl<T: SimpleTile> Tile for T {
         SimpleTile::identifier(self)
     }
 
-    fn connect(
-        &self,
-        tile: &dyn Tile<Identifier = Self::Identifier>,
-        side: Side
-    ) -> bool {
+    fn connect(&self, tile: &dyn Tile<Identifier = Self::Identifier>, side: Side) -> bool {
         self.accept(tile) && self.acceptable_sides().contains(&side)
     }
 }

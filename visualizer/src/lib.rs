@@ -8,8 +8,8 @@ use yew::props;
 mod components;
 mod js;
 mod macros;
-pub mod renderable_tiles;
 mod pages;
+pub mod renderable_tiles;
 
 pub fn start<Id: RenderableTileId>(field: Field<'static, Id>) {
     yew::start_app_with_props::<IndexPage<Id>>(props! {

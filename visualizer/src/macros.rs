@@ -6,7 +6,7 @@ macro_rules! define_css {
 
             $css.unwrap().get_class_name().to_string()
         }
-    }
+    };
 }
 
 #[macro_export]
